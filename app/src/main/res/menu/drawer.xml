@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:id="@+id/maingroup" android:checkableBehavior="single">
+        <item
+            android:id="@+id/news"
+            android:title="some" />
+    </group>
+    <group android:id="@+id/secondgroup" android:checkableBehavior="single">
+        <item
+            android:id="@+id/login"
+            android:title="login to your account" />
+        <item
+            android:id="@+id/settings"
+            android:title="settings" />
+    </group>
+
+</menu>
