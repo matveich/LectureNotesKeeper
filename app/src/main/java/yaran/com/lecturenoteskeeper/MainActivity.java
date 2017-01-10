@@ -10,6 +10,8 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
 
+import yaran.com.lecturenoteskeeper.Database.CardsDbHelper;
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     public static int width, height;
     public static Context context;
@@ -35,6 +37,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.requestLayout();
         navigationView.bringToFront();
         navigationView.setNavigationItemSelectedListener(this);
+
+        //CardsDbHelper cardsDbHelper = new CardsDbHelper(context);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
