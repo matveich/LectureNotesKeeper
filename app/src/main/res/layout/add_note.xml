@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="128dp"
+        android:layout_height="128dp"
+        app:srcCompat="@drawable/addimage"
+        android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp"
+        android:id="@+id/image_field"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:scaleType="centerCrop" />
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/title_field"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Введите заголовок"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+        android:maxLines="1"
+        app:met_primaryColor="@color/loginButtonColor"
+        app:met_underlineColor="@color/loginButtonColor"
+        android:layout_toLeftOf="@+id/image_field"
+        android:layout_toStartOf="@+id/image_field" />
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/date_field"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Выберите дату"
+        android:maxLines="1"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+        android:editable="false"
+        app:met_primaryColor="@color/loginButtonColor"
+        app:met_underlineColor="@color/loginButtonColor"
+        android:layout_below="@+id/title_field"
+        android:layout_toLeftOf="@+id/image_field"
+        android:layout_toStartOf="@+id/image_field" />
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/time_field"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Выберите время"
+        android:maxLines="1"
+        android:editable="false"
+        app:met_primaryColor="@color/loginButtonColor"
+        app:met_underlineColor="@color/loginButtonColor"
+        android:layout_below="@+id/date_field"
+        android:layout_alignLeft="@+id/date_field"
+        android:layout_alignStart="@+id/date_field"
+        android:layout_alignRight="@+id/date_field"
+        android:layout_alignEnd="@+id/date_field" />
+
+</RelativeLayout>

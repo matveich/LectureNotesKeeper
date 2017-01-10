@@ -3,4 +3,15 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <!--FAB Colors -->
+    <color name="MainGreenBackgroundColor">#47a184</color>
+    <color name="MainButtonColor">#c84b2e</color>
+    <color name="MainTitleTextColor">#ffffff</color>
+    <color name="MainTextColor">#7f7f7f</color>
+    <color name="ripple">#ffffff</color>
+
+    <!-- Login Activity-->
+    <color name="loginBackground">#dddddd</color>
+    <color name="loginButtonColor">#ad804f</color>
 </resources>
