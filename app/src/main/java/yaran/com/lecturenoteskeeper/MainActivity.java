@@ -93,8 +93,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         .inflate(R.layout.add_note, null);
                 builder.setView(addNoteLayout);
                 builder.setCancelable(false);
-                builder.setPositiveButton("Выбрать", null);
-                builder.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton(getResources().getString(R.string.dialog_enter), null);
+                builder.setNegativeButton(getResources().getString(R.string.dialog_cancel), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }
@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 datePicker.updateDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
                                 dateBuilder.setView(datePicker);
                                 dateBuilder.setCancelable(false);
-                                dateBuilder.setPositiveButton("Выбрать", new DialogInterface.OnClickListener() {
+                                dateBuilder.setPositiveButton(getResources().getString(R.string.dialog_enter), new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
                                         if (datePicker.getMonth() < 9)
                                             dateField.setText(datePicker.getDayOfMonth() + ".0" + (datePicker.getMonth() + 1) + "." + datePicker.getYear());
@@ -135,7 +135,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                         dialog.cancel();
                                     }
                                 });
-                                dateBuilder.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+                                dateBuilder.setNegativeButton(getResources().getString(R.string.dialog_cancel), new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
                                         dialog.cancel();
                                     }
@@ -159,7 +159,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 timePicker.setCurrentMinute(cal.get(Calendar.MINUTE));
                                 timeBuilder.setView(timePicker);
                                 timeBuilder.setCancelable(false);
-                                timeBuilder.setPositiveButton("Выбрать", new DialogInterface.OnClickListener() {
+                                timeBuilder.setPositiveButton(getResources().getString(R.string.dialog_enter), new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
                                         if (timePicker.getCurrentHour() < 10 & timePicker.getCurrentMinute() < 10)
                                             timeField.setText("0" + timePicker.getCurrentHour() + ":0" + timePicker.getCurrentMinute());
@@ -170,7 +170,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                         dialog.cancel();
                                     }
                                 });
-                                timeBuilder.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+                                timeBuilder.setNegativeButton(getResources().getString(R.string.dialog_cancel), new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
                                         dialog.cancel();
                                     }
@@ -218,7 +218,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                             datePicker.updateDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
                                             dateBuilder.setView(datePicker);
                                             dateBuilder.setCancelable(false);
-                                            dateBuilder.setPositiveButton("Выбрать", new DialogInterface.OnClickListener() {
+                                            dateBuilder.setPositiveButton(getResources().getString(R.string.dialog_enter), new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialog, int id) {
                                                     if (datePicker.getMonth() < 9)
                                                         homeworkDateField.setText(datePicker.getDayOfMonth() + ".0" + (datePicker.getMonth() + 1) + "." + datePicker.getYear());
@@ -227,7 +227,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                                     dialog.cancel();
                                                 }
                                             });
-                                            dateBuilder.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+                                            dateBuilder.setNegativeButton(getResources().getString(R.string.dialog_cancel), new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialog, int id) {
                                                     dialog.cancel();
                                                 }
@@ -253,7 +253,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                             timePicker.setCurrentMinute(cal.get(Calendar.MINUTE));
                                             timeBuilder.setView(timePicker);
                                             timeBuilder.setCancelable(false);
-                                            timeBuilder.setPositiveButton("Выбрать", new DialogInterface.OnClickListener() {
+                                            timeBuilder.setPositiveButton(getResources().getString(R.string.dialog_enter), new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialog, int id) {
                                                     if (timePicker.getCurrentHour() < 10 & timePicker.getCurrentMinute() < 10)
                                                         homeworkTimeField.setText("0" + timePicker.getCurrentHour() + ":0" + timePicker.getCurrentMinute());
@@ -264,7 +264,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                                     dialog.cancel();
                                                 }
                                             });
-                                            timeBuilder.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+                                            timeBuilder.setNegativeButton(getResources().getString(R.string.dialog_cancel), new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialog, int id) {
                                                     dialog.cancel();
                                                 }
@@ -306,7 +306,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
-            case R.id.settings:
+            case R.id.drawerSettings:
                 break;
             default:
                 break;

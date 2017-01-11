@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">LectureNotesKeeper</string>
+    <string-array name="NotesTypes">
+        <item>Конспект</item>
+        <item>ДЗ</item>
+        <item>Другое</item>
+    </string-array>
+
+    <!-- adding new Lecture Note -->
+    <string name="adding_title">Заголовок</string>
+    <string name="adding_date">Дата</string>
+    <string name="adding_time">Время</string>
+    <string name="adding_type">Тип</string>
+    <string name="adding_write_subject">Введите предмет</string>
+    <string name="adding_write_comment">Введите комментарий (если требуется)</string>
+    <string name="adding_choose_date">Выберите дату</string>
+    <string name="adding_choose_time">Выберите время</string>
+    <string name="adding_remember_before">Напомнить за сутки?</string>
+
+    <!-- AlertDialog Strings -->
+    <string name="dialog_enter">Выбрать</string>
+    <string name="dialog_cancel">Отмена</string>
+
+    <!-- Navigation Drawer -->
+    <string name="drawer_login">Войти</string>
+    <string name="drawer_lecture_notes">Конспекты</string>
+    <string name="drawer_homework">Домашнее задание</string>
+    <string name="drawer_other">Другое</string>
+    <string name="drawer_settings">Настройки</string>
+</resources>

@@ -1,8 +1,30 @@
 <resources>
     <string name="app_name">LectureNotesKeeper</string>
     <string-array name="NotesTypes">
-        <item>Конспект</item>
-        <item>ДЗ</item>
-        <item>Другое</item>
+        <item>Lecture note</item>
+        <item>Homework</item>
+        <item>Other</item>
     </string-array>
+
+    <!-- adding new Lecture Note -->
+    <string name="adding_title">Title</string>
+    <string name="adding_date">Date</string>
+    <string name="adding_time">Time</string>
+    <string name="adding_type">Type</string>
+    <string name="adding_write_subject">Write subject</string>
+    <string name="adding_write_comment">Write commentary (if needed)</string>
+    <string name="adding_choose_date">Choose date</string>
+    <string name="adding_choose_time">Choose time</string>
+    <string name="adding_remember_before">Notify the day before</string>
+
+    <!-- AlertDialog Strings -->
+    <string name="dialog_enter">Enter</string>
+    <string name="dialog_cancel">Cancel</string>
+
+    <!-- Navigation Drawer -->
+    <string name="drawer_login">Sign in</string>
+    <string name="drawer_lecture_notes">Lecture notes</string>
+    <string name="drawer_homework">Homework</string>
+    <string name="drawer_other">Other</string>
+    <string name="drawer_settings">Settings</string>
 </resources>

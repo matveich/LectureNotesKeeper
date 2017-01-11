@@ -27,7 +27,7 @@
         android:layout_marginTop="16dp"
         android:layout_toLeftOf="@+id/image_field"
         android:layout_toStartOf="@+id/image_field"
-        android:hint="Заголовок"
+        android:hint="@string/adding_title"
         android:maxLines="1"
         app:met_primaryColor="@color/loginButtonColor"
         app:met_underlineColor="@color/loginButtonColor" />
@@ -44,7 +44,7 @@
         android:layout_toStartOf="@+id/image_field"
         android:editable="false"
         android:enabled="true"
-        android:hint="Дата"
+        android:hint="@string/adding_date"
         android:maxLines="1"
         app:met_primaryColor="@color/loginButtonColor"
         app:met_underlineColor="@color/loginButtonColor" />
@@ -60,7 +60,7 @@
         android:layout_below="@+id/date_field"
         android:editable="false"
         android:enabled="true"
-        android:hint="Время"
+        android:hint="@string/adding_time"
         android:maxLines="1"
         app:met_primaryColor="@color/loginButtonColor"
         app:met_underlineColor="@color/loginButtonColor" />
@@ -75,7 +75,7 @@
         android:layout_marginTop="16dp"
         android:editable="false"
         android:maxLines="1"
-        android:text="Тип"
+        android:text="@string/adding_type"
         app:met_primaryColor="@color/loginButtonColor"
         app:met_underlineColor="@color/loginButtonColor" />
 
@@ -101,7 +101,7 @@
         android:layout_alignRight="@+id/image_field"
         android:layout_alignStart="@+id/time_field"
         android:layout_below="@+id/type_field"
-        android:hint="Введите предмет"
+        android:hint="@string/adding_write_subject"
         android:maxLines="1"
         android:visibility="invisible"
         app:met_primaryColor="@color/loginButtonColor"
@@ -117,7 +117,7 @@
         android:layout_alignStart="@+id/time_field"
         android:layout_below="@+id/subject_field"
         android:layout_marginBottom="16dp"
-        android:hint="Введите комментарий (если требуется)"
+        android:hint="@string/adding_write_comment"
         android:visibility="invisible"
         app:met_primaryColor="@color/loginButtonColor"
         app:met_underlineColor="@color/loginButtonColor" />
@@ -132,7 +132,7 @@
         android:layout_alignStart="@+id/time_field"
         android:layout_below="@+id/type_field"
         android:editable="false"
-        android:hint="Выберите дату"
+        android:hint="@string/adding_choose_date"
         android:maxLines="1"
         android:visibility="invisible"
         app:met_primaryColor="@color/loginButtonColor"
@@ -148,7 +148,7 @@
         android:layout_alignStart="@+id/time_field"
         android:layout_below="@+id/homework_date_field"
         android:editable="false"
-        android:hint="Выберите время"
+        android:hint="@string/adding_choose_time"
         android:maxLines="1"
         android:visibility="invisible"
         app:met_primaryColor="@color/loginButtonColor"
@@ -165,7 +165,7 @@
         android:layout_below="@+id/homework_time_field"
         android:layout_marginTop="16dp"
         android:checked="true"
-        android:text="Напомнить вам за сутки?"
+        android:text="@string/adding_remember_before"
         android:textSize="18sp"
         android:visibility="invisible"
         app:theme="@style/SwitchCompatStyle" />
@@ -180,7 +180,7 @@
         android:layout_alignStart="@+id/time_field"
         android:layout_below="@+id/type_field"
         android:layout_marginBottom="16dp"
-        android:hint="Введите комментарий (если требуется)"
+        android:hint="@string/adding_write_comment"
         android:visibility="invisible"
         app:met_primaryColor="@color/loginButtonColor"
         app:met_underlineColor="@color/loginButtonColor" />

@@ -2,16 +2,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:id="@+id/maingroup" android:checkableBehavior="single">
         <item
-            android:id="@+id/news"
-            android:title="some" />
+            android:id="@+id/drawerLectureNotes"
+            android:title="@string/drawer_lecture_notes" />
+        <item
+            android:id="@+id/drawerHomework"
+            android:title="@string/drawer_homework" />
+        <item
+            android:id="@+id/drawerOther"
+            android:title="@string/drawer_other" />
     </group>
     <group android:id="@+id/secondgroup" android:checkableBehavior="single">
         <item
-            android:id="@+id/login"
-            android:title="login to your account" />
-        <item
-            android:id="@+id/settings"
-            android:title="settings" />
+            android:id="@+id/drawerSettings"
+            android:title="@string/drawer_settings" />
     </group>
 
 </menu>
