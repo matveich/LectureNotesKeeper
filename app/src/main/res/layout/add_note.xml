@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
+    <!-- Main body -->
     <ImageView
         android:id="@+id/image_field"
         android:layout_width="128dp"
@@ -79,7 +79,8 @@
         app:met_primaryColor="@color/loginButtonColor"
         app:met_underlineColor="@color/loginButtonColor" />
 
-    <Spinner
+    <!-- Lecture note -->
+    <android.support.v7.widget.AppCompatSpinner
         android:id="@+id/spinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -90,7 +91,6 @@
         android:layout_toEndOf="@+id/type_field"
         android:layout_toRightOf="@+id/type_field"
         android:entries="@array/NotesTypes" />
-
 
     <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/subject_field"
@@ -122,6 +122,7 @@
         app:met_primaryColor="@color/loginButtonColor"
         app:met_underlineColor="@color/loginButtonColor" />
 
+    <!-- Homework -->
     <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/homework_subject"
         android:layout_width="match_parent"
@@ -170,6 +171,8 @@
         android:visibility="invisible"
         app:theme="@style/SwitchCompatStyle" />
 
+
+    <!-- Other -->
     <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/other_comment_field"
         android:layout_width="match_parent"
