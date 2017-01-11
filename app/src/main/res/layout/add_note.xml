@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
+    <!-- Main body -->
     <ImageView
         android:id="@+id/image_field"
         android:layout_width="128dp"
@@ -79,7 +79,8 @@
         app:met_primaryColor="@color/loginButtonColor"
         app:met_underlineColor="@color/loginButtonColor" />
 
-    <Spinner
+    <!-- Lecture note -->
+    <android.support.v7.widget.AppCompatSpinner
         android:id="@+id/spinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -90,7 +91,6 @@
         android:layout_toEndOf="@+id/type_field"
         android:layout_toRightOf="@+id/type_field"
         android:entries="@array/NotesTypes" />
-
 
     <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/subject_field"
@@ -122,8 +122,9 @@
         app:met_primaryColor="@color/loginButtonColor"
         app:met_underlineColor="@color/loginButtonColor" />
 
+    <!-- Homework -->
     <com.rengwuxian.materialedittext.MaterialEditText
-        android:id="@+id/homework_date_field"
+        android:id="@+id/homework_subject"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignEnd="@+id/subject_field"
@@ -132,23 +133,23 @@
         android:layout_alignStart="@+id/time_field"
         android:layout_below="@+id/type_field"
         android:editable="false"
-        android:hint="@string/adding_choose_date"
+        android:hint="@string/adding_write_subject"
         android:maxLines="1"
         android:visibility="invisible"
         app:met_primaryColor="@color/loginButtonColor"
         app:met_underlineColor="@color/loginButtonColor" />
 
     <com.rengwuxian.materialedittext.MaterialEditText
-        android:id="@+id/homework_time_field"
+        android:id="@+id/homework_date_field"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignEnd="@+id/subject_field"
         android:layout_alignLeft="@+id/time_field"
         android:layout_alignRight="@+id/subject_field"
         android:layout_alignStart="@+id/time_field"
-        android:layout_below="@+id/homework_date_field"
+        android:layout_below="@+id/homework_subject"
         android:editable="false"
-        android:hint="@string/adding_choose_time"
+        android:hint="@string/adding_choose_date"
         android:maxLines="1"
         android:visibility="invisible"
         app:met_primaryColor="@color/loginButtonColor"
@@ -162,7 +163,7 @@
         android:layout_alignLeft="@+id/time_field"
         android:layout_alignRight="@+id/subject_field"
         android:layout_alignStart="@+id/time_field"
-        android:layout_below="@+id/homework_time_field"
+        android:layout_below="@+id/homework_date_field"
         android:layout_marginTop="16dp"
         android:checked="true"
         android:text="@string/adding_remember_before"
@@ -170,6 +171,8 @@
         android:visibility="invisible"
         app:theme="@style/SwitchCompatStyle" />
 
+
+    <!-- Other -->
     <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/other_comment_field"
         android:layout_width="match_parent"

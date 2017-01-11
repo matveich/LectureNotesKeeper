@@ -7,8 +7,10 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
@@ -20,30 +22,36 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
+import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.io.File;
 import java.util.Calendar;
-import java.util.Date;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     public static int width, height;
     public static Context context;
     ImageView imageField;
-    MaterialEditText titleField, dateField, timeField, subjectField, commentField, homeworkDateField, homeworkTimeField, otherCommentField;
+    MaterialSearchView searchView;
+    MaterialEditText titleField, dateField, timeField, subjectField, commentField, homeworkDateField, homeworkSubjectField, otherCommentField;
     SwitchCompat needNotification;
 
     public int dpToPx(int dp) {
@@ -63,6 +71,37 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         context = getApplicationContext();
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitleTextColor(Color.WHITE);
+        toolbar.setSubtitleTextColor(Color.WHITE);
+        setSupportActionBar(toolbar);
+        searchView = (MaterialSearchView) findViewById(R.id.search_view);
+        searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                //when you click search
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                //when you typing
+                return false;
+            }
+        });
+
+        searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
+            @Override
+            public void onSearchViewShown() {
+                //when you open search
+            }
+
+            @Override
+            public void onSearchViewClosed() {
+                //when you close search
+            }
+        });
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.requestLayout();
         navigationView.bringToFront();
@@ -72,16 +111,34 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         display.getSize(size);
         width = size.x;
         height = size.y;
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            final Window window = getWindow();
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(getResources().getColor(R.color.loginButtonColor));
+        }
+        //ask for permission. next time we should move it to another code block
         if (ContextCompat.checkSelfPermission(MainActivity.this,
                 Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(MainActivity.this,
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                    1);
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
         }
 
+        final TextView userName = (TextView) navigationView.getHeaderView(0).findViewById(R.id.UserName);
+        userName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (userName.getText().equals(getResources().getString(R.string.drawer_login))) {
 
+                } else {
+                    //exit form google account
+                }
+            }
+        });
+
+
+        //fab code. should move to its own class
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.calendar);
         final Calendar cal = Calendar.getInstance();
         fab.setOnClickListener(new View.OnClickListener() {
@@ -193,7 +250,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             commentField.setVisibility(View.VISIBLE);
                             try {
                                 homeworkDateField.setVisibility(View.INVISIBLE);
-                                homeworkTimeField.setVisibility(View.INVISIBLE);
+                                homeworkSubjectField.setVisibility(View.INVISIBLE);
                                 needNotification.setVisibility(View.INVISIBLE);
                                 otherCommentField.setVisibility(View.INVISIBLE);
                             } catch (java.lang.NullPointerException g) {
@@ -239,43 +296,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 }
                             });
 
-                            homeworkTimeField = (MaterialEditText) addNoteLayout.findViewById(R.id.homework_time_field);
-                            homeworkTimeField.setVisibility(View.VISIBLE);
-                            homeworkTimeField.setOnTouchListener(new View.OnTouchListener() {
-                                @Override
-                                public boolean onTouch(View view, MotionEvent motionEvent) {
-                                    switch (motionEvent.getAction()) {
-                                        case MotionEvent.ACTION_DOWN:
-                                            final AlertDialog.Builder timeBuilder =
-                                                    new AlertDialog.Builder(MainActivity.this, R.style.AppCompatAlertDialogStyle);
-                                            final TimePicker timePicker = new TimePicker(MainActivity.this);
-                                            timePicker.setCurrentHour(cal.get(Calendar.HOUR_OF_DAY));
-                                            timePicker.setCurrentMinute(cal.get(Calendar.MINUTE));
-                                            timeBuilder.setView(timePicker);
-                                            timeBuilder.setCancelable(false);
-                                            timeBuilder.setPositiveButton(getResources().getString(R.string.dialog_enter), new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int id) {
-                                                    if (timePicker.getCurrentHour() < 10 & timePicker.getCurrentMinute() < 10)
-                                                        homeworkTimeField.setText("0" + timePicker.getCurrentHour() + ":0" + timePicker.getCurrentMinute());
-                                                    else if (timePicker.getCurrentHour() < 10)
-                                                        homeworkTimeField.setText("0" + timePicker.getCurrentHour() + ":" + timePicker.getCurrentMinute());
-                                                    else
-                                                        homeworkTimeField.setText(timePicker.getCurrentHour() + ":0" + timePicker.getCurrentMinute());
-                                                    dialog.cancel();
-                                                }
-                                            });
-                                            timeBuilder.setNegativeButton(getResources().getString(R.string.dialog_cancel), new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int id) {
-                                                    dialog.cancel();
-                                                }
-                                            });
-                                            timeBuilder.show();
-                                            break;
-                                    }
-                                    return true;
-                                }
-                            });
-
+                            homeworkSubjectField = (MaterialEditText) addNoteLayout.findViewById(R.id.homework_subject);
+                            homeworkSubjectField.setVisibility(View.VISIBLE);
                             needNotification = (SwitchCompat) addNoteLayout.findViewById(R.id.need_notification);
                             needNotification.setVisibility(View.VISIBLE);
                         } else if (i == 2) {
@@ -283,7 +305,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 subjectField.setVisibility(View.INVISIBLE);
                                 commentField.setVisibility(View.INVISIBLE);
                                 homeworkDateField.setVisibility(View.INVISIBLE);
-                                homeworkTimeField.setVisibility(View.INVISIBLE);
+                                homeworkSubjectField.setVisibility(View.INVISIBLE);
                                 needNotification.setVisibility(View.INVISIBLE);
                             } catch (java.lang.NullPointerException g) {
                             }
@@ -330,6 +352,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_search, menu);
+
+        MenuItem item = menu.findItem(R.id.action_search);
+        searchView.setMenuItem(item);
+
+        return true;
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode != RESULT_OK) {
@@ -346,17 +378,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Log.d("picturePath = ", picturePath);
             imageField.setImageBitmap(BitmapFactory.decodeFile(picturePath));
             File file = new File(picturePath);
-            if (file.exists()) {
-                Date lastModDate = new Date(file.lastModified());
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(lastModDate);
-                if (dateField.getText().length() < 1)
-                    dateField.setText(cal.get(Calendar.DAY_OF_MONTH) + "." + (cal.get(Calendar.MONTH) + 1) + "." + cal.get(Calendar.YEAR));
-                if (timeField.getText().length() < 1)
-                    timeField.setText(cal.get(Calendar.HOUR_OF_DAY) + ":" + cal.get(Calendar.MINUTE));
-                if (titleField.getText().length() < 1)
-                    titleField.setText(file.getName());
-            }
+
         }
     }
 }
