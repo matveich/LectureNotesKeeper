@@ -5,20 +5,20 @@
         <item name="windowActionBar">false</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">#47a184</item>
+        <item name="colorAccent">@color/loginButtonColor</item>
     </style>
     <style name="AppTheme.Base" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">#47a184</item>
+        <item name="colorAccent">@color/loginButtonColor</item>
     </style>
     <style name="AppCompatAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="colorAccent">#47a184</item>
+        <item name="colorAccent">@color/loginButtonColor</item>
         <item name="android:textColorPrimary">#FFFFFF</item>
         <item name="android:background">#FFFFFF</item>
-        <item name="android:headerBackground">#47a184</item>
+        <item name="android:headerBackground">@color/loginButtonColor</item>
         <item name="android:windowFrame">@null</item>
         <item name="android:windowIsFloating">true</item>
         <item name="android:windowContentOverlay">@null</item>

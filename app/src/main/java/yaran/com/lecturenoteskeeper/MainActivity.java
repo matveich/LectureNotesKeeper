@@ -24,11 +24,14 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TimePicker;
 
 import com.rengwuxian.materialedittext.MaterialEditText;
 
@@ -80,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.calendar);
-        Calendar cal = Calendar.getInstance();
+        final Calendar cal = Calendar.getInstance();
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -112,17 +115,70 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 titleField = (MaterialEditText) addNoteLayout.findViewById(R.id.title_field);
                 dateField = (MaterialEditText) addNoteLayout.findViewById(R.id.date_field);
-                dateField.setOnClickListener(new View.OnClickListener() {
+                dateField.setOnTouchListener(new View.OnTouchListener() {
                     @Override
-                    public void onClick(View view) {
-
+                    public boolean onTouch(View view, MotionEvent motionEvent) {
+                        switch (motionEvent.getAction()) {
+                            case MotionEvent.ACTION_DOWN:
+                                final AlertDialog.Builder dateBuilder =
+                                        new AlertDialog.Builder(MainActivity.this, R.style.AppCompatAlertDialogStyle);
+                                final DatePicker datePicker = new DatePicker(MainActivity.this);
+                                datePicker.updateDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+                                dateBuilder.setView(datePicker);
+                                dateBuilder.setCancelable(false);
+                                dateBuilder.setPositiveButton("Выбрать", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        if (datePicker.getMonth() < 9)
+                                            dateField.setText(datePicker.getDayOfMonth() + ".0" + (datePicker.getMonth() + 1) + "." + datePicker.getYear());
+                                        else
+                                            dateField.setText(datePicker.getDayOfMonth() + "." + (datePicker.getMonth() + 1) + "." + datePicker.getYear());
+                                        dialog.cancel();
+                                    }
+                                });
+                                dateBuilder.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+                                dateBuilder.show();
+                                break;
+                        }
+                        return true;
                     }
                 });
                 timeField = (MaterialEditText) addNoteLayout.findViewById(R.id.time_field);
-                titleField.setOnClickListener(new View.OnClickListener() {
+                timeField.setOnTouchListener(new View.OnTouchListener() {
                     @Override
-                    public void onClick(View view) {
-
+                    public boolean onTouch(View view, MotionEvent motionEvent) {
+                        switch (motionEvent.getAction()) {
+                            case MotionEvent.ACTION_DOWN:
+                                final AlertDialog.Builder timeBuilder =
+                                        new AlertDialog.Builder(MainActivity.this, R.style.AppCompatAlertDialogStyle);
+                                final TimePicker timePicker = new TimePicker(MainActivity.this);
+                                timePicker.setCurrentHour(cal.get(Calendar.HOUR_OF_DAY));
+                                timePicker.setCurrentMinute(cal.get(Calendar.MINUTE));
+                                timeBuilder.setView(timePicker);
+                                timeBuilder.setCancelable(false);
+                                timeBuilder.setPositiveButton("Выбрать", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        if (timePicker.getCurrentHour() < 10 & timePicker.getCurrentMinute() < 10)
+                                            timeField.setText("0" + timePicker.getCurrentHour() + ":0" + timePicker.getCurrentMinute());
+                                        else if (timePicker.getCurrentHour() < 10)
+                                            timeField.setText("0" + timePicker.getCurrentHour() + ":" + timePicker.getCurrentMinute());
+                                        else
+                                            timeField.setText(timePicker.getCurrentHour() + ":0" + timePicker.getCurrentMinute());
+                                        dialog.cancel();
+                                    }
+                                });
+                                timeBuilder.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+                                timeBuilder.show();
+                                break;
+                        }
+                        return true;
                     }
                 });
 
@@ -151,8 +207,75 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             }
                             homeworkDateField = (MaterialEditText) addNoteLayout.findViewById(R.id.homework_date_field);
                             homeworkDateField.setVisibility(View.VISIBLE);
+                            homeworkDateField.setOnTouchListener(new View.OnTouchListener() {
+                                @Override
+                                public boolean onTouch(View view, MotionEvent motionEvent) {
+                                    switch (motionEvent.getAction()) {
+                                        case MotionEvent.ACTION_DOWN:
+                                            final AlertDialog.Builder dateBuilder =
+                                                    new AlertDialog.Builder(MainActivity.this, R.style.AppCompatAlertDialogStyle);
+                                            final DatePicker datePicker = new DatePicker(MainActivity.this);
+                                            datePicker.updateDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+                                            dateBuilder.setView(datePicker);
+                                            dateBuilder.setCancelable(false);
+                                            dateBuilder.setPositiveButton("Выбрать", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int id) {
+                                                    if (datePicker.getMonth() < 9)
+                                                        homeworkDateField.setText(datePicker.getDayOfMonth() + ".0" + (datePicker.getMonth() + 1) + "." + datePicker.getYear());
+                                                    else
+                                                        homeworkDateField.setText(datePicker.getDayOfMonth() + "." + (datePicker.getMonth() + 1) + "." + datePicker.getYear());
+                                                    dialog.cancel();
+                                                }
+                                            });
+                                            dateBuilder.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int id) {
+                                                    dialog.cancel();
+                                                }
+                                            });
+                                            dateBuilder.show();
+                                            break;
+                                    }
+                                    return true;
+                                }
+                            });
+
                             homeworkTimeField = (MaterialEditText) addNoteLayout.findViewById(R.id.homework_time_field);
                             homeworkTimeField.setVisibility(View.VISIBLE);
+                            homeworkTimeField.setOnTouchListener(new View.OnTouchListener() {
+                                @Override
+                                public boolean onTouch(View view, MotionEvent motionEvent) {
+                                    switch (motionEvent.getAction()) {
+                                        case MotionEvent.ACTION_DOWN:
+                                            final AlertDialog.Builder timeBuilder =
+                                                    new AlertDialog.Builder(MainActivity.this, R.style.AppCompatAlertDialogStyle);
+                                            final TimePicker timePicker = new TimePicker(MainActivity.this);
+                                            timePicker.setCurrentHour(cal.get(Calendar.HOUR_OF_DAY));
+                                            timePicker.setCurrentMinute(cal.get(Calendar.MINUTE));
+                                            timeBuilder.setView(timePicker);
+                                            timeBuilder.setCancelable(false);
+                                            timeBuilder.setPositiveButton("Выбрать", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int id) {
+                                                    if (timePicker.getCurrentHour() < 10 & timePicker.getCurrentMinute() < 10)
+                                                        homeworkTimeField.setText("0" + timePicker.getCurrentHour() + ":0" + timePicker.getCurrentMinute());
+                                                    else if (timePicker.getCurrentHour() < 10)
+                                                        homeworkTimeField.setText("0" + timePicker.getCurrentHour() + ":" + timePicker.getCurrentMinute());
+                                                    else
+                                                        homeworkTimeField.setText(timePicker.getCurrentHour() + ":0" + timePicker.getCurrentMinute());
+                                                    dialog.cancel();
+                                                }
+                                            });
+                                            timeBuilder.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int id) {
+                                                    dialog.cancel();
+                                                }
+                                            });
+                                            timeBuilder.show();
+                                            break;
+                                    }
+                                    return true;
+                                }
+                            });
+
                             needNotification = (SwitchCompat) addNoteLayout.findViewById(R.id.need_notification);
                             needNotification.setVisibility(View.VISIBLE);
                         } else if (i == 2) {
@@ -227,14 +350,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Date lastModDate = new Date(file.lastModified());
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(lastModDate);
-                Log.i("pictureDate = ", lastModDate.toString());
                 if (dateField.getText().length() < 1)
                     dateField.setText(cal.get(Calendar.DAY_OF_MONTH) + "." + (cal.get(Calendar.MONTH) + 1) + "." + cal.get(Calendar.YEAR));
                 if (timeField.getText().length() < 1)
                     timeField.setText(cal.get(Calendar.HOUR_OF_DAY) + ":" + cal.get(Calendar.MINUTE));
                 if (titleField.getText().length() < 1)
                     titleField.setText(file.getName());
-                Log.d("pictureTitle = ", picturePath.substring(picturePath.lastIndexOf("/") + 1));
             }
         }
     }

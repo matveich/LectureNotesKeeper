@@ -27,7 +27,7 @@
         android:layout_marginTop="16dp"
         android:layout_toLeftOf="@+id/image_field"
         android:layout_toStartOf="@+id/image_field"
-        android:hint="Введите заголовок"
+        android:hint="Заголовок"
         android:maxLines="1"
         app:met_primaryColor="@color/loginButtonColor"
         app:met_underlineColor="@color/loginButtonColor" />
@@ -43,7 +43,8 @@
         android:layout_toLeftOf="@+id/image_field"
         android:layout_toStartOf="@+id/image_field"
         android:editable="false"
-        android:hint="Выберите дату"
+        android:enabled="true"
+        android:hint="Дата"
         android:maxLines="1"
         app:met_primaryColor="@color/loginButtonColor"
         app:met_underlineColor="@color/loginButtonColor" />
@@ -58,7 +59,8 @@
         android:layout_alignStart="@+id/date_field"
         android:layout_below="@+id/date_field"
         android:editable="false"
-        android:hint="Выберите время"
+        android:enabled="true"
+        android:hint="Время"
         android:maxLines="1"
         app:met_primaryColor="@color/loginButtonColor"
         app:met_underlineColor="@color/loginButtonColor" />
@@ -178,8 +180,8 @@
         android:layout_alignStart="@+id/time_field"
         android:layout_below="@+id/type_field"
         android:layout_marginBottom="16dp"
-        android:visibility="invisible"
         android:hint="Введите комментарий (если требуется)"
+        android:visibility="invisible"
         app:met_primaryColor="@color/loginButtonColor"
         app:met_underlineColor="@color/loginButtonColor" />
 </RelativeLayout>
