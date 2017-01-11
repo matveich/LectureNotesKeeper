@@ -222,8 +222,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                             timeField.setText("0" + timePicker.getCurrentHour() + ":0" + timePicker.getCurrentMinute());
                                         else if (timePicker.getCurrentHour() < 10)
                                             timeField.setText("0" + timePicker.getCurrentHour() + ":" + timePicker.getCurrentMinute());
-                                        else
+                                        else if (timePicker.getCurrentMinute() < 10)
                                             timeField.setText(timePicker.getCurrentHour() + ":0" + timePicker.getCurrentMinute());
+                                        else
+                                            timeField.setText(timePicker.getCurrentHour() + ":" + timePicker.getCurrentMinute());
                                         dialog.cancel();
                                     }
                                 });
