@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">LectureNotesKeeper</string>
+    <string-array name="NotesTypes">
+        <item>Конспект</item>
+        <item>ДЗ</item>
+        <item>Другое</item>
+    </string-array>
 </resources>

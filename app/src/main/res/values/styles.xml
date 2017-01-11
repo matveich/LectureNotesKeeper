@@ -19,7 +19,14 @@
         <item name="android:textColorPrimary">#FFFFFF</item>
         <item name="android:background">#FFFFFF</item>
         <item name="android:headerBackground">#47a184</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        <item name="android:windowSoftInputMode">stateUnspecified|adjustPan</item>
     </style>
 
-
+    <style name="SwitchCompatStyle">
+        <item name="colorControlActivated">@color/loginButtonColor</item>
+    </style>
 </resources>

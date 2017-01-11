@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -18,12 +19,16 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SwitchCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 
 import com.rengwuxian.materialedittext.MaterialEditText;
 
@@ -35,7 +40,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static int width, height;
     public static Context context;
     ImageView imageField;
-    MaterialEditText titleField, dateField, timeField;
+    MaterialEditText titleField, dateField, timeField, subjectField, commentField, homeworkDateField, homeworkTimeField, otherCommentField;
+    SwitchCompat needNotification;
 
     public int dpToPx(int dp) {
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
@@ -58,6 +64,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.requestLayout();
         navigationView.bringToFront();
         navigationView.setNavigationItemSelectedListener(this);
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        width = size.x;
+        height = size.y;
 
         if (ContextCompat.checkSelfPermission(MainActivity.this,
                 Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -75,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onClick(View view) {
                 AlertDialog.Builder builder =
                         new AlertDialog.Builder(MainActivity.this, R.style.AppCompatAlertDialogStyle);
-                RelativeLayout addNoteLayout = (RelativeLayout) getLayoutInflater()
+                final RelativeLayout addNoteLayout = (RelativeLayout) getLayoutInflater()
                         .inflate(R.layout.add_note, null);
                 builder.setView(addNoteLayout);
                 builder.setCancelable(false);
@@ -101,7 +112,68 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 titleField = (MaterialEditText) addNoteLayout.findViewById(R.id.title_field);
                 dateField = (MaterialEditText) addNoteLayout.findViewById(R.id.date_field);
+                dateField.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                    }
+                });
                 timeField = (MaterialEditText) addNoteLayout.findViewById(R.id.time_field);
+                titleField.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                    }
+                });
+
+                Spinner typeSpinner = (Spinner) addNoteLayout.findViewById(R.id.spinner);
+                typeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                        if (i == 0) {
+                            subjectField = (MaterialEditText) addNoteLayout.findViewById(R.id.subject_field);
+                            subjectField.setVisibility(View.VISIBLE);
+                            commentField = (MaterialEditText) addNoteLayout.findViewById(R.id.comment_field);
+                            commentField.setVisibility(View.VISIBLE);
+                            try {
+                                homeworkDateField.setVisibility(View.INVISIBLE);
+                                homeworkTimeField.setVisibility(View.INVISIBLE);
+                                needNotification.setVisibility(View.INVISIBLE);
+                                otherCommentField.setVisibility(View.INVISIBLE);
+                            } catch (java.lang.NullPointerException g) {
+                            }
+                        } else if (i == 1) {
+                            try {
+                                subjectField.setVisibility(View.INVISIBLE);
+                                commentField.setVisibility(View.INVISIBLE);
+                                otherCommentField.setVisibility(View.INVISIBLE);
+                            } catch (java.lang.NullPointerException g) {
+                            }
+                            homeworkDateField = (MaterialEditText) addNoteLayout.findViewById(R.id.homework_date_field);
+                            homeworkDateField.setVisibility(View.VISIBLE);
+                            homeworkTimeField = (MaterialEditText) addNoteLayout.findViewById(R.id.homework_time_field);
+                            homeworkTimeField.setVisibility(View.VISIBLE);
+                            needNotification = (SwitchCompat) addNoteLayout.findViewById(R.id.need_notification);
+                            needNotification.setVisibility(View.VISIBLE);
+                        } else if (i == 2) {
+                            try {
+                                subjectField.setVisibility(View.INVISIBLE);
+                                commentField.setVisibility(View.INVISIBLE);
+                                homeworkDateField.setVisibility(View.INVISIBLE);
+                                homeworkTimeField.setVisibility(View.INVISIBLE);
+                                needNotification.setVisibility(View.INVISIBLE);
+                            } catch (java.lang.NullPointerException g) {
+                            }
+                            otherCommentField = (MaterialEditText) addNoteLayout.findViewById(R.id.other_comment_field);
+                            otherCommentField.setVisibility(View.VISIBLE);
+                        }
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> adapterView) {
+
+                    }
+                });
             }
         });
     }
@@ -151,16 +223,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Log.d("picturePath = ", picturePath);
             imageField.setImageBitmap(BitmapFactory.decodeFile(picturePath));
             File file = new File(picturePath);
-            if (file.exists())
-            {
+            if (file.exists()) {
                 Date lastModDate = new Date(file.lastModified());
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(lastModDate);
                 Log.i("pictureDate = ", lastModDate.toString());
-                dateField.setText(cal.get(Calendar.DAY_OF_MONTH)+"."+(cal.get(Calendar.MONTH)+1)+"."+cal.get(Calendar.YEAR));
-                timeField.setText(cal.get(Calendar.HOUR_OF_DAY)+":"+cal.get(Calendar.MINUTE));
-                titleField.setText(file.getName());
-                Log.d("pictureTitle = ", picturePath.substring(picturePath.lastIndexOf("/")+1));
+                if (dateField.getText().length() < 1)
+                    dateField.setText(cal.get(Calendar.DAY_OF_MONTH) + "." + (cal.get(Calendar.MONTH) + 1) + "." + cal.get(Calendar.YEAR));
+                if (timeField.getText().length() < 1)
+                    timeField.setText(cal.get(Calendar.HOUR_OF_DAY) + ":" + cal.get(Calendar.MINUTE));
+                if (titleField.getText().length() < 1)
+                    titleField.setText(file.getName());
+                Log.d("pictureTitle = ", picturePath.substring(picturePath.lastIndexOf("/") + 1));
             }
         }
     }
