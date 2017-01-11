@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
@@ -26,11 +27,14 @@ import android.view.Display;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.rengwuxian.materialedittext.MaterialEditText;
@@ -72,16 +76,34 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         display.getSize(size);
         width = size.x;
         height = size.y;
-
+        final Window window = getWindow();
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.setStatusBarColor(getResources().getColor(R.color.loginButtonColor));
+        }
+        //ask for permission. next time we should move it to another code block
         if (ContextCompat.checkSelfPermission(MainActivity.this,
                 Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(MainActivity.this,
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                    1);
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
         }
 
+        final TextView userName = (TextView) navigationView.getHeaderView(0).findViewById(R.id.UserName);
+        userName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (userName.getText().equals(getResources().getString(R.string.drawer_login))) {
 
+                } else {
+                    //exit form google account
+                }
+            }
+        });
+
+
+        //fab code. should move to its own class
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.calendar);
         final Calendar cal = Calendar.getInstance();
         fab.setOnClickListener(new View.OnClickListener() {
