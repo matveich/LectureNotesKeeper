@@ -50,10 +50,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static int width, height;
     public static Context context;
     ImageView imageField;
+    Spinner typeSpinner;
     MaterialSearchView searchView;
     MaterialEditText titleField, dateField, timeField, subjectField, commentField, homeworkDateField, homeworkSubjectField, otherCommentField;
     SwitchCompat needNotification;
-
+    String pathToFile = "";
     public int dpToPx(int dp) {
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
         int px = Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
@@ -150,7 +151,42 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         .inflate(R.layout.add_note, null);
                 builder.setView(addNoteLayout);
                 builder.setCancelable(false);
-                builder.setPositiveButton(getResources().getString(R.string.dialog_enter), null);
+                builder.setPositiveButton(getResources().getString(R.string.dialog_enter), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        //Сюда вставишь добавление объекта в бз
+                        Log.d("shit", typeSpinner.getSelectedItemPosition() + "");
+                        switch (typeSpinner.getSelectedItemPosition()) {
+                            case 0:
+                                //lecture note
+                                // pathToFile - путь до изображения
+                                //titleField.getText(); //Заголовок записи
+                                //dateField.getText(); //Дата
+                                //timeField.getText(); //Время
+                                //subjectField.getText(); //название предмета (может быть пустым, тогда просто пробел передай или null)
+                                //commentField.getText(); // комментарий (может быть пустым, тогда просто пробел передай или null)
+                                break;
+                            case 1:
+                                // homework
+                                // pathToFile - путь до изображения
+                                //titleField.getText(); //Заголовок записи
+                                //dateField.getText(); //Дата
+                                //timeField.getText(); //Время
+                                //homeworkSubjectField.getText(); //название предмета (может быть пустым, тогда просто пробел передай или null)
+                                //homeworkDateField.getText(); // дата, к которой нужно сделать дз
+                                //needNotification.isChecked(); // нужно ли уведомление
+                                break;
+                            case 2:
+                                //other
+                                // pathToFile - путь до изображения
+                                //titleField.getText(); //Заголовок записи
+                                //dateField.getText(); //Дата
+                                //timeField.getText(); //Время
+                                //otherCommentField.getText(); //комментарий (может быть пустым, тогда просто пробел передай или null)
+                                break;
+                        }
+                        dialog.cancel();
+                    }
+                });
                 builder.setNegativeButton(getResources().getString(R.string.dialog_cancel), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
@@ -241,7 +277,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                 });
 
-                Spinner typeSpinner = (Spinner) addNoteLayout.findViewById(R.id.spinner);
+                typeSpinner = (Spinner) addNoteLayout.findViewById(R.id.spinner);
                 typeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -378,6 +414,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             String picturePath = cursor.getString(columnIndex);
             cursor.close();
             Log.d("picturePath = ", picturePath);
+            pathToFile = picturePath;
             imageField.setImageBitmap(BitmapFactory.decodeFile(picturePath));
             File file = new File(picturePath);
 
