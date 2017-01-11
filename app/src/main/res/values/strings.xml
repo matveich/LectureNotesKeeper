@@ -12,7 +12,7 @@
     <string name="adding_time">Time</string>
     <string name="adding_type">Type</string>
     <string name="adding_write_subject">Write subject</string>
-    <string name="adding_write_comment">Write commentary (if needed)</string>
+    <string name="adding_write_comment">Write commentary (if necessary)</string>
     <string name="adding_choose_date">Choose date</string>
     <string name="adding_choose_time">Choose time</string>
     <string name="adding_remember_before">Notify the day before</string>

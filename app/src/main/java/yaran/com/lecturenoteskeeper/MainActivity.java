@@ -41,13 +41,12 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.io.File;
 import java.util.Calendar;
-import java.util.Date;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     public static int width, height;
     public static Context context;
     ImageView imageField;
-    MaterialEditText titleField, dateField, timeField, subjectField, commentField, homeworkDateField, homeworkTimeField, otherCommentField;
+    MaterialEditText titleField, dateField, timeField, subjectField, commentField, homeworkDateField, homeworkSubjectField, otherCommentField;
     SwitchCompat needNotification;
 
     public int dpToPx(int dp) {
@@ -215,7 +214,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             commentField.setVisibility(View.VISIBLE);
                             try {
                                 homeworkDateField.setVisibility(View.INVISIBLE);
-                                homeworkTimeField.setVisibility(View.INVISIBLE);
+                                homeworkSubjectField.setVisibility(View.INVISIBLE);
                                 needNotification.setVisibility(View.INVISIBLE);
                                 otherCommentField.setVisibility(View.INVISIBLE);
                             } catch (java.lang.NullPointerException g) {
@@ -261,43 +260,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 }
                             });
 
-                            homeworkTimeField = (MaterialEditText) addNoteLayout.findViewById(R.id.homework_time_field);
-                            homeworkTimeField.setVisibility(View.VISIBLE);
-                            homeworkTimeField.setOnTouchListener(new View.OnTouchListener() {
-                                @Override
-                                public boolean onTouch(View view, MotionEvent motionEvent) {
-                                    switch (motionEvent.getAction()) {
-                                        case MotionEvent.ACTION_DOWN:
-                                            final AlertDialog.Builder timeBuilder =
-                                                    new AlertDialog.Builder(MainActivity.this, R.style.AppCompatAlertDialogStyle);
-                                            final TimePicker timePicker = new TimePicker(MainActivity.this);
-                                            timePicker.setCurrentHour(cal.get(Calendar.HOUR_OF_DAY));
-                                            timePicker.setCurrentMinute(cal.get(Calendar.MINUTE));
-                                            timeBuilder.setView(timePicker);
-                                            timeBuilder.setCancelable(false);
-                                            timeBuilder.setPositiveButton(getResources().getString(R.string.dialog_enter), new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int id) {
-                                                    if (timePicker.getCurrentHour() < 10 & timePicker.getCurrentMinute() < 10)
-                                                        homeworkTimeField.setText("0" + timePicker.getCurrentHour() + ":0" + timePicker.getCurrentMinute());
-                                                    else if (timePicker.getCurrentHour() < 10)
-                                                        homeworkTimeField.setText("0" + timePicker.getCurrentHour() + ":" + timePicker.getCurrentMinute());
-                                                    else
-                                                        homeworkTimeField.setText(timePicker.getCurrentHour() + ":0" + timePicker.getCurrentMinute());
-                                                    dialog.cancel();
-                                                }
-                                            });
-                                            timeBuilder.setNegativeButton(getResources().getString(R.string.dialog_cancel), new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int id) {
-                                                    dialog.cancel();
-                                                }
-                                            });
-                                            timeBuilder.show();
-                                            break;
-                                    }
-                                    return true;
-                                }
-                            });
-
+                            homeworkSubjectField = (MaterialEditText) addNoteLayout.findViewById(R.id.homework_subject);
+                            homeworkSubjectField.setVisibility(View.VISIBLE);
                             needNotification = (SwitchCompat) addNoteLayout.findViewById(R.id.need_notification);
                             needNotification.setVisibility(View.VISIBLE);
                         } else if (i == 2) {
@@ -305,7 +269,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 subjectField.setVisibility(View.INVISIBLE);
                                 commentField.setVisibility(View.INVISIBLE);
                                 homeworkDateField.setVisibility(View.INVISIBLE);
-                                homeworkTimeField.setVisibility(View.INVISIBLE);
+                                homeworkSubjectField.setVisibility(View.INVISIBLE);
                                 needNotification.setVisibility(View.INVISIBLE);
                             } catch (java.lang.NullPointerException g) {
                             }
@@ -368,17 +332,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Log.d("picturePath = ", picturePath);
             imageField.setImageBitmap(BitmapFactory.decodeFile(picturePath));
             File file = new File(picturePath);
-            if (file.exists()) {
-                Date lastModDate = new Date(file.lastModified());
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(lastModDate);
-                if (dateField.getText().length() < 1)
-                    dateField.setText(cal.get(Calendar.DAY_OF_MONTH) + "." + (cal.get(Calendar.MONTH) + 1) + "." + cal.get(Calendar.YEAR));
-                if (timeField.getText().length() < 1)
-                    timeField.setText(cal.get(Calendar.HOUR_OF_DAY) + ":" + cal.get(Calendar.MINUTE));
-                if (titleField.getText().length() < 1)
-                    titleField.setText(file.getName());
-            }
+
         }
     }
 }
