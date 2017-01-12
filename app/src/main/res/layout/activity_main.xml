@@ -21,6 +21,14 @@
         android:layout_height="match_parent"
         android:background="#c2c2c2">
 
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#c2c2c2"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp" />
+
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/calendar"
             android:layout_width="56dp"

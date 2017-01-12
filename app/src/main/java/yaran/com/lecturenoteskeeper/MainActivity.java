@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,6 +22,8 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
@@ -30,8 +33,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.LayoutAnimationController;
+import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.DatePicker;
 import android.widget.ImageView;
@@ -44,10 +53,16 @@ import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import yaran.com.lecturenoteskeeper.Database.Card;
 import yaran.com.lecturenoteskeeper.Database.DatabaseWrapper;
+import yaran.com.lecturenoteskeeper.RecyclerViewClasses.RVAdapter;
+import yaran.com.lecturenoteskeeper.RecyclerViewClasses.RVCard;
+
+import static yaran.com.lecturenoteskeeper.R.id.recyclerView;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     public static int width, height;
@@ -58,21 +73,44 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     MaterialEditText titleField, dateField, timeField, subjectField, commentField, homeworkDateField, homeworkSubjectField, otherCommentField;
     SwitchCompat needNotification;
     String pathToFile = "";
-
+    List<RVCard> cardsList = new ArrayList<>();
     DatabaseWrapper db;
+    RVAdapter adapter;
+    RecyclerView mainRecyclerView;
 
-    public int dpToPx(int dp) {
-        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+    public static int dpToPx(int dp) {
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         int px = Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
         return px;
     }
 
-    public int pxToDp(int px) {
-        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+    public static int pxToDp(int px) {
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         int dp = Math.round(px / (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
         return dp;
     }
 
+    private void initializeAdapter() {
+        adapter = new RVAdapter(cardsList);
+        mainRecyclerView.setAdapter(adapter);
+        AnimationSet set = new AnimationSet(true);
+
+        Animation animation = new AlphaAnimation(0.0f, 1.0f);
+        animation.setDuration(500);
+        set.addAnimation(animation);
+        animation = new TranslateAnimation(
+                Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f,
+                Animation.RELATIVE_TO_SELF, -1.0f, Animation.RELATIVE_TO_SELF, 0.0f
+        );
+        animation.setDuration(100);
+        set.addAnimation(animation);
+        LayoutAnimationController controller = new LayoutAnimationController(set, 0.3f);
+        mainRecyclerView.setLayoutAnimation(controller);
+    }
+
+    private void updateAdapter() {
+        adapter.notifyDataSetChanged();
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -148,7 +186,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
-
+        mainRecyclerView = (RecyclerView) findViewById(recyclerView);
+        mainRecyclerView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height - dpToPx(56)));
+        mainRecyclerView.setY(dpToPx(56));
+        LinearLayoutManager llm = new LinearLayoutManager(this);
+        mainRecyclerView.setLayoutManager(llm);
+        int spanCount = 2;
+        int spacing = 32;
+        boolean includeEdge = true;
+        mainRecyclerView.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, includeEdge));
+        initializeAdapter();
         //fab code. should move to its own class
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.calendar);
         final Calendar cal = Calendar.getInstance();
@@ -173,8 +220,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                         .setTitle(titleField.getText().toString())
                                         .setDatetime(dateField.getText() + " " + timeField.getText())
                                         .setSubject(subjectField.getText().toString())
-                                        .setDescription(commentField.getText().toString())
-                                );
+                                        .setDescription(commentField.getText().toString()));
+                                /* this.title = title;
+                                this.subject = subject;
+                                this.imagePath = imagePath;
+                                this.type = type;
+                                this.comment = comment;
+                                this.needNotification = needNotification;*/
+                                RVCard newLectureCard = new RVCard(titleField.getText() + "", subjectField.getText() + "", pathToFile, 1, commentField.getText() + "", false);
+                                cardsList.add(newLectureCard);
+                                updateAdapter();
                                 //lecture note
                                 // pathToFile - путь до изображения
                                 //titleField.getText(); //Заголовок записи
@@ -192,8 +247,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                         .setSubject(homeworkSubjectField.getText().toString())
                                         .setDescription(commentField.getText().toString())
                                         .setDeadlineDatetime(homeworkDateField.getText().toString())
-                                        .setNotificationFlag(needNotification.isChecked() ? 1 : 0)
-                                );
+                                        .setNotificationFlag(needNotification.isChecked() ? 1 : 0));
+                                RVCard newHomeworkCard = new RVCard(titleField.getText() + "", homeworkSubjectField.getText() + "", pathToFile, 2, "", needNotification.isChecked());
+                                cardsList.add(newHomeworkCard);
+                                updateAdapter();
                                 // homework
                                 // pathToFile - путь до изображения
                                 //titleField.getText(); //Заголовок записи
@@ -209,8 +266,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                         .setFilepath(pathToFile)
                                         .setTitle(titleField.getText().toString())
                                         .setDatetime(dateField.getText() + " " + timeField.getText())
-                                        .setDescription(otherCommentField.getText().toString())
-                                );
+                                        .setDescription(otherCommentField.getText().toString()));
+                                RVCard newOtherCard = new RVCard(titleField.getText() + "", "", pathToFile, 3, "", false);
+                                cardsList.add(newOtherCard);
+                                updateAdapter();
                                 //other
                                 // pathToFile - путь до изображения
                                 //titleField.getText(); //Заголовок записи
@@ -453,6 +512,40 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             imageField.setImageBitmap(BitmapFactory.decodeFile(picturePath));
             File file = new File(picturePath);
 
+        }
+    }
+
+    public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
+
+        private int spanCount;
+        private int spacing;
+        private boolean includeEdge;
+
+        public GridSpacingItemDecoration(int spanCount, int spacing, boolean includeEdge) {
+            this.spanCount = spanCount;
+            this.spacing = spacing;
+            this.includeEdge = includeEdge;
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+            int position = parent.getChildAdapterPosition(view);
+            int column = position % spanCount;
+            if (includeEdge) {
+                outRect.left = spacing - column * spacing / spanCount;
+                outRect.right = (column + 1) * spacing / spanCount;
+
+                if (position < spanCount) {
+                    outRect.top = spacing;
+                }
+                outRect.bottom = spacing;
+            } else {
+                outRect.left = column * spacing / spanCount;
+                outRect.right = spacing - (column + 1) * spacing / spanCount;
+                if (position >= spanCount) {
+                    outRect.top = spacing;
+                }
+            }
         }
     }
 }
