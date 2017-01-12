@@ -6,14 +6,12 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.widget.Toast;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
+
+
+import static yaran.com.lecturenoteskeeper.StaticInfo.stringToDate;
 
 public class DatabaseWrapper {
     private CardsDbHelper dbHelper;
@@ -27,22 +25,23 @@ public class DatabaseWrapper {
         db = dbHelper.getWritableDatabase();
     }
 
-    void put(Card card) {
+    public void put(Card card) {
         ContentValues values = new ContentValues();
         values.put(Card.Entry.COLUMN_NAME_FILEPATH, card.getFilepath());
-        values.put(Card.Entry.COLUMN_NAME_FILENAME, card.getFilename());
         values.put(Card.Entry.COLUMN_NAME_TITLE, card.getTitle());
         values.put(Card.Entry.COLUMN_NAME_DESCRIPTION, card.getDescription());
         values.put(Card.Entry.COLUMN_NAME_TYPE, card.getType());
         values.put(Card.Entry.COLUMN_NAME_SUBJECT, card.getSubject());
-        values.put(Card.Entry.COLUMN_NAME_DATETIME, card.getDatetime().toString());
-        values.put(Card.Entry.COLUMN_NAME_DEADLINE_DATETIME, card.getDeadlineDatetime().toString());
+        if (card.getDatetime() != null)
+            values.put(Card.Entry.COLUMN_NAME_DATETIME, card.getDatetime());
+        if (card.getDeadlineDatetime() != null)
+            values.put(Card.Entry.COLUMN_NAME_DEADLINE_DATETIME, card.getDeadlineDatetime());
         values.put(Card.Entry.COLUMN_NAME_NOTIFICATION_FLAG, card.getNotificationFlag());
         db.insert(Card.Entry.TABLE_NAME, null, values);
     }
 
     //the wrapper of db.query which returns values from db in more convenient form
-    List<Card> get(String[] columns, String selection, String[] selectionArgs,
+    public List<Card> get(String[] columns, String selection, String[] selectionArgs,
                    String groupBy, String having, String orderBy) {
         Cursor cursor = db.query(Card.Entry.TABLE_NAME, columns, selection,
                 selectionArgs, groupBy, having, orderBy);
@@ -59,10 +58,11 @@ public class DatabaseWrapper {
             }
             cards.add(convertMapToCard(tmp_dict));
         }
+        cursor.close();
         return cards;
     }
 
-    void delete(String selection, String[] selectionArgs) {
+    public void delete(String selection, String[] selectionArgs) {
         db.delete(Card.Entry.TABLE_NAME, selection, selectionArgs);
     }
 
@@ -72,9 +72,6 @@ public class DatabaseWrapper {
             switch (entry.getKey()) {
                 case Card.Entry.COLUMN_NAME_FILEPATH:
                     card.setFilepath(entry.getValue());
-                    break;
-                case Card.Entry.COLUMN_NAME_FILENAME:
-                    card.setFilename(entry.getValue());
                     break;
                 case Card.Entry.COLUMN_NAME_TITLE:
                     card.setTitle(entry.getValue());
@@ -89,10 +86,10 @@ public class DatabaseWrapper {
                     card.setSubject(entry.getValue());
                     break;
                 case Card.Entry.COLUMN_NAME_DATETIME:
-                    card.setDatetime(stringToDate(entry.getValue()));
+                    card.setDatetime(entry.getValue());
                     break;
                 case Card.Entry.COLUMN_NAME_DEADLINE_DATETIME:
-                    card.setDeadlineDatetime(stringToDate(entry.getValue()));
+                    card.setDeadlineDatetime(entry.getValue());
                     break;
                 case Card.Entry.COLUMN_NAME_NOTIFICATION_FLAG:
                     card.setNotificationFlag(Integer.parseInt(entry.getValue()));
@@ -100,17 +97,5 @@ public class DatabaseWrapper {
             }
         }
         return card;
-    }
-
-    private Date stringToDate(String str) {
-        Date date = null;
-        try {
-            DateFormat format = new SimpleDateFormat("YYYY-MM-DD HH:MM:SS", Locale.US);
-            date = format.parse(str);
-        }
-        catch (ParseException e) {
-            Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
-        }
-        return date;
     }
 }

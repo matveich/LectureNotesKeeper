@@ -46,6 +46,9 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 import java.io.File;
 import java.util.Calendar;
 
+import yaran.com.lecturenoteskeeper.Database.Card;
+import yaran.com.lecturenoteskeeper.Database.DatabaseWrapper;
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     public static int width, height;
     public static Context context;
@@ -55,6 +58,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     MaterialEditText titleField, dateField, timeField, subjectField, commentField, homeworkDateField, homeworkSubjectField, otherCommentField;
     SwitchCompat needNotification;
     String pathToFile = "";
+
+    DatabaseWrapper db;
+
     public int dpToPx(int dp) {
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
         int px = Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
@@ -78,6 +84,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar.setSubtitleTextColor(Color.WHITE);
         setSupportActionBar(toolbar);
         searchView = (MaterialSearchView) findViewById(R.id.search_view);
+
+        Log.d(StaticInfo.DEBUG_TAG, "-1");
+        db = new DatabaseWrapper(context);
+
         searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -157,6 +167,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         Log.d("shit", typeSpinner.getSelectedItemPosition() + "");
                         switch (typeSpinner.getSelectedItemPosition()) {
                             case 0:
+                                db.put(new Card()
+                                        .setType("note")
+                                        .setFilepath(pathToFile)
+                                        .setTitle(titleField.getText().toString())
+                                        .setDatetime(dateField.getText() + " " + timeField.getText())
+                                        .setSubject(subjectField.getText().toString())
+                                        .setDescription(commentField.getText().toString())
+                                );
                                 //lecture note
                                 // pathToFile - путь до изображения
                                 //titleField.getText(); //Заголовок записи
@@ -166,6 +184,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 //commentField.getText(); // комментарий (может быть пустым, тогда просто пробел передай или null)
                                 break;
                             case 1:
+                                db.put(new Card()
+                                        .setType("homework")
+                                        .setFilepath(pathToFile)
+                                        .setTitle(titleField.getText().toString())
+                                        .setDatetime(dateField.getText() + " " + timeField.getText())
+                                        .setSubject(homeworkSubjectField.getText().toString())
+                                        .setDescription(commentField.getText().toString())
+                                        .setDeadlineDatetime(homeworkDateField.getText().toString())
+                                        .setNotificationFlag(needNotification.isChecked() ? 1 : 0)
+                                );
                                 // homework
                                 // pathToFile - путь до изображения
                                 //titleField.getText(); //Заголовок записи
@@ -176,6 +204,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 //needNotification.isChecked(); // нужно ли уведомление
                                 break;
                             case 2:
+                                db.put(new Card()
+                                        .setType("other")
+                                        .setFilepath(pathToFile)
+                                        .setTitle(titleField.getText().toString())
+                                        .setDatetime(dateField.getText() + " " + timeField.getText())
+                                        .setDescription(otherCommentField.getText().toString())
+                                );
                                 //other
                                 // pathToFile - путь до изображения
                                 //titleField.getText(); //Заголовок записи

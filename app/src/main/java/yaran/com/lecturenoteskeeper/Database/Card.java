@@ -1,27 +1,23 @@
 package yaran.com.lecturenoteskeeper.Database;
 
 
-import android.graphics.Bitmap;
 import android.provider.BaseColumns;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 public class Card {
     private String filepath = "";
-    private String filename = "";
     private String title = "";
     private String description = "";
     private String type = "";
     private String subject = "";
-    private Date datetime = null;
-    private Date deadline_datetime = null;
+    private String datetime = null;
+    private String deadline_datetime = null;
     private int notification_flag = 0;
 
     public ArrayList<Object> asArray() {
         ArrayList<Object> obj = new ArrayList<>();
         obj.add(filepath);
-        obj.add(filename);
         obj.add(title);
         obj.add(description);
         obj.add(type);
@@ -39,15 +35,6 @@ public class Card {
 
     public String getFilepath() {
         return filepath;
-    }
-
-    public Card setFilename(String filename) {
-        this.filename = filename;
-        return this;
-    }
-
-    public String getFilename() {
-        return filename;
     }
 
     public Card setTitle(String title) {
@@ -86,21 +73,21 @@ public class Card {
         return subject;
     }
 
-    public Card setDatetime(Date datetime) {
+    public Card setDatetime(String datetime) {
         this.datetime = datetime;
         return this;
     }
 
-    public Date getDatetime() {
+    public String getDatetime() {
         return datetime;
     }
 
-    public Card setDeadlineDatetime(Date deadlineDatetime) {
+    public Card setDeadlineDatetime(String deadlineDatetime) {
         this.deadline_datetime = deadlineDatetime;
         return this;
     }
 
-    public Date getDeadlineDatetime() {
+    public String getDeadlineDatetime() {
         return deadline_datetime;
     }
 
@@ -116,7 +103,6 @@ public class Card {
     public abstract class Entry implements BaseColumns {
         public static final String TABLE_NAME = "cards";
         public static final String COLUMN_NAME_FILEPATH = "filepath";
-        public static final String COLUMN_NAME_FILENAME = "filename";
         public static final String COLUMN_NAME_TITLE = "title";
         public static final String COLUMN_NAME_DESCRIPTION = "description";
         public static final String COLUMN_NAME_TYPE = "type";
