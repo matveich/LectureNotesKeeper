@@ -48,6 +48,7 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.rengwuxian.materialedittext.MaterialEditText;
@@ -60,7 +61,6 @@ import java.util.Date;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import yaran.com.lecturenoteskeeper.Database.Card;
 import yaran.com.lecturenoteskeeper.Database.DatabaseWrapper;
@@ -96,7 +96,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void initializeAdapter() {
-        List<Card> d = db.get(null, null, null, null, null, null);
+        //List<Card> d = db.get(null, null, null, null, null, null);
+        List<Card> d = new ArrayList<>();
         for (Card z : d) {
              /* this.title = title;
                                 this.subject = subject;
@@ -153,6 +154,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
         searchView = (MaterialSearchView) findViewById(R.id.search_view);
 
+        //ask for permission. next time we should move it to another code block
+        if (ContextCompat.checkSelfPermission(MainActivity.this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(MainActivity.this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+        }
+
         db = new DatabaseWrapper(context);
 
         searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
@@ -194,13 +203,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(getResources().getColor(R.color.loginButtonColor));
-        }
-        //ask for permission. next time we should move it to another code block
-        if (ContextCompat.checkSelfPermission(MainActivity.this,
-                Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(MainActivity.this,
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
         }
 
         final TextView userName = (TextView) navigationView.getHeaderView(0).findViewById(R.id.UserName);
@@ -245,10 +247,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 db.put(new Card()
                                         .setType("note")
                                         .setFilepath(pathToFile)
-                                        .setTitle(titleField.getText().toString())
+                                        .setTitle(titleField.getText().toString().trim())
                                         .setDatetime(dateField.getText() + " " + timeField.getText())
-                                        .setSubject(subjectField.getText().toString())
-                                        .setDescription(commentField.getText().toString()))
+                                        .setSubject(subjectField.getText().toString().trim())
+                                        .setDescription(commentField.getText().toString().trim()))
                                         .subscribeOn(Schedulers.newThread())
                                         .observeOn(AndroidSchedulers.mainThread())
                                         .subscribe();
@@ -273,11 +275,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 db.put(new Card()
                                         .setType("homework")
                                         .setFilepath(pathToFile)
-                                        .setTitle(titleField.getText().toString())
+                                        .setTitle(titleField.getText().toString().trim())
                                         .setDatetime(dateField.getText() + " " + timeField.getText())
-                                        .setSubject(homeworkSubjectField.getText().toString())
-                                        .setDescription(commentField.getText().toString())
-                                        .setDeadlineDatetime(homeworkDateField.getText().toString())
+                                        .setSubject(homeworkSubjectField.getText().toString().trim())
+                                        .setDescription(commentField.getText().toString().trim())
+                                        .setDeadlineDatetime(homeworkDateField.getText().toString().trim())
                                         .setNotificationFlag(needNotification.isChecked() ? 1 : 0))
                                         .subscribeOn(Schedulers.newThread())
                                         .observeOn(AndroidSchedulers.mainThread())
@@ -298,9 +300,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 db.put(new Card()
                                         .setType("other")
                                         .setFilepath(pathToFile)
-                                        .setTitle(titleField.getText().toString())
+                                        .setTitle(titleField.getText().toString().trim())
                                         .setDatetime(dateField.getText() + " " + timeField.getText())
-                                        .setDescription(otherCommentField.getText().toString()))
+                                        .setDescription(otherCommentField.getText().toString().trim()))
                                         .subscribeOn(Schedulers.newThread())
                                         .observeOn(AndroidSchedulers.mainThread())
                                         .subscribe();
@@ -545,6 +547,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             cursor.close();
             Log.d("picturePath = ", picturePath);
             pathToFile = picturePath;
+            Toast.makeText(context, pathToFile, Toast.LENGTH_SHORT).show();
+            StaticInfo.moveFileToAppFolder(pathToFile);
             imageField.setImageBitmap(BitmapFactory.decodeFile(picturePath));
             File file = new File(picturePath);
             Date lastModifiedDate = new Date(file.lastModified());
