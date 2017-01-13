@@ -22,7 +22,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
@@ -55,6 +55,7 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import yaran.com.lecturenoteskeeper.Database.Card;
@@ -111,6 +112,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void updateAdapter() {
         adapter.notifyDataSetChanged();
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -189,10 +191,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mainRecyclerView = (RecyclerView) findViewById(recyclerView);
         mainRecyclerView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height - dpToPx(56)));
         mainRecyclerView.setY(dpToPx(56));
-        LinearLayoutManager llm = new LinearLayoutManager(this);
-        mainRecyclerView.setLayoutManager(llm);
+        mainRecyclerView.setLayoutManager(new GridLayoutManager(context, 2));
         int spanCount = 2;
-        int spacing = 32;
+        int spacing = 16;
         boolean includeEdge = true;
         mainRecyclerView.addItemDecoration(new GridSpacingItemDecoration(spanCount, spacing, includeEdge));
         initializeAdapter();
@@ -511,7 +512,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             pathToFile = picturePath;
             imageField.setImageBitmap(BitmapFactory.decodeFile(picturePath));
             File file = new File(picturePath);
-
+            Date lastModifiedDate = new Date(file.lastModified());
+            Calendar calendarForThis = Calendar.getInstance();
+            calendarForThis.setTime(lastModifiedDate);
+            if (dateField.getText().length() < 1) {
+                if (calendarForThis.get(Calendar.MONTH) < 9)
+                    dateField.setText(calendarForThis.get(Calendar.DAY_OF_MONTH) + ".0" + (calendarForThis.get(Calendar.MONTH) + 1) + "." + calendarForThis.get(Calendar.YEAR));
+                else
+                    dateField.setText(calendarForThis.get(Calendar.DAY_OF_MONTH) + "." + (calendarForThis.get(Calendar.MONTH) + 1) + "." + calendarForThis.get(Calendar.YEAR));
+            }
+            if (timeField.getText().length() < 1) {
+                if (calendarForThis.get(Calendar.HOUR_OF_DAY) < 10 & calendarForThis.get(Calendar.MINUTE) < 10)
+                    timeField.setText("0" + calendarForThis.get(Calendar.HOUR_OF_DAY) + ":0" + calendarForThis.get(Calendar.MINUTE));
+                else if (calendarForThis.get(Calendar.HOUR_OF_DAY) < 10)
+                    timeField.setText("0" + calendarForThis.get(Calendar.HOUR_OF_DAY) + ":" + calendarForThis.get(Calendar.MINUTE));
+                else if (calendarForThis.get(Calendar.MINUTE) < 10)
+                    timeField.setText(calendarForThis.get(Calendar.HOUR_OF_DAY) + ":0" + calendarForThis.get(Calendar.MINUTE));
+                else
+                    timeField.setText(calendarForThis.get(Calendar.HOUR_OF_DAY) + ":" + calendarForThis.get(Calendar.MINUTE));
+            }
+            if (titleField.getText().length() < 1)
+                titleField.setText(pathToFile.substring(pathToFile.lastIndexOf("/") + 1));
         }
     }
 

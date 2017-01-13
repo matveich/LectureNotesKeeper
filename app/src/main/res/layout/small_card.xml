@@ -9,8 +9,8 @@
 
     <RelativeLayout
         android:id="@+id/Layout"
-        android:layout_width="180dp"
-        android:layout_height="240dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:background="#e6e6e6">
 
         <ImageView
@@ -43,7 +43,7 @@
             android:padding="4dp"
             android:text="может быть 2 строки, конечно, но может и не быть"
             android:textColor="#ffffff"
-            android:textSize="16sp" />
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/small_subject"
@@ -56,6 +56,7 @@
             android:padding="4dp"
             android:text="Физика"
             android:textColor="#ffffff"
+            android:textSize="12sp"
             android:textStyle="normal|italic" />
 
         <ImageView

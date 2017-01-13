@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -41,7 +42,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.RVCardViewHolder> 
     @Override
     public void onBindViewHolder(RVCardViewHolder mRVCardViewHolder, int i) {
         mRVCardViewHolder.title.setText(RVCards.get(i).title);
-        mRVCardViewHolder.subject.setText(RVCards.get(i).title);
+        mRVCardViewHolder.subject.setText(RVCards.get(i).subject);
         mRVCardViewHolder.type = RVCards.get(i).type;
         mRVCardViewHolder.imagePath = RVCards.get(i).imagePath;
         Picasso.with(MainActivity.context)
@@ -60,6 +61,12 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.RVCardViewHolder> 
                 mRVCardViewHolder.typeImage.setImageDrawable(MainActivity.context.getResources().getDrawable(R.drawable.other));
                 break;
         }
+        mRVCardViewHolder.cv.setLayoutParams(new RelativeLayout.LayoutParams((int) (MainActivity.width / 2.5), (int) (MainActivity.width / 2.5 / 3 * 4)));
+        RelativeLayout.LayoutParams ll = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) (MainActivity.width / 2.5 / 2.25));
+        ll.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        ll.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+        mRVCardViewHolder.someBackground.setLayoutParams(ll);
+        mRVCardViewHolder.typeImage.setLayoutParams(new RelativeLayout.LayoutParams((int) (MainActivity.width / 2.5 / 2.8125), (int) (MainActivity.width / 2.5 / 2.8125)));
     }
 
     @Override
@@ -76,6 +83,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.RVCardViewHolder> 
         ImageView typeImage;
         int type;
         String imagePath;
+        ImageView someBackground;
 
         RVCardViewHolder(final View itemView) {
             super(itemView);
@@ -85,6 +93,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.RVCardViewHolder> 
             subject = (TextView) itemView.findViewById(R.id.small_subject);
             smallImage = (ImageView) itemView.findViewById(R.id.small_image);
             typeImage = (ImageView) itemView.findViewById(R.id.type_icon);
+            someBackground = (ImageView) itemView.findViewById(R.id.some_background);
             itemView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View v, boolean hasFocus) {
