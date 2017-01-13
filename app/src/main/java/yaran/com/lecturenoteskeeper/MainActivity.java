@@ -48,6 +48,7 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.rengwuxian.materialedittext.MaterialEditText;
@@ -60,7 +61,6 @@ import java.util.Date;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import yaran.com.lecturenoteskeeper.Database.Card;
 import yaran.com.lecturenoteskeeper.Database.DatabaseWrapper;
@@ -96,30 +96,34 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void initializeAdapter() {
-        List<Card> d = db.get(null, null, null, null, null, null);
-        for (Card z : d) {
-             /* this.title = title;
-                                this.subject = subject;
-                                this.imagePath = imagePath;
-                                this.type = type;
-                                this.comment = comment;
-                                this.needNotification = needNotification;*/
-            boolean needNotif = false;
-            if (z.getNotificationFlag() == 0)
-                needNotif = false;
-            else
-                needNotif = true;
-            int subType = 1;
-            if (z.getType().equals("note"))
-                subType = 1;
-            else if (z.getType().equals("homework"))
-                subType = 2;
-            else
-                subType = 3;
-            RVCard newLectureCard = new RVCard(z.getTitle() + "", z.getSubject() + "", z.getFilepath() + "", subType, z.getDescription() + "", needNotif);
-            cardsList.add(newLectureCard);
-        }
-        Collections.reverse(cardsList);
+        db.get(null, null, null, null, null, null)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        cardList -> {
+                            List<Card> d = cardList;
+                            for (Card z : d) {
+                                boolean needNotif = false;
+                                if (z.getNotificationFlag() == 0)
+                                    needNotif = false;
+                                else
+                                    needNotif = true;
+                                int subType = 1;
+                                if (z.getType().equals("note"))
+                                    subType = 1;
+                                else if (z.getType().equals("homework"))
+                                    subType = 2;
+                                else
+                                    subType = 3;
+                                RVCard newLectureCard = new RVCard(z.getTitle() + "", z.getSubject() + "", z.getFilepath() + "", subType, z.getDescription() + "", needNotif);
+                                cardsList.add(newLectureCard);
+                            }
+                            Collections.reverse(cardsList);
+                        },
+                        error -> {
+                            Toast.makeText(context, "loading error. pls restart app", Toast.LENGTH_SHORT).show();
+                        }
+                );
         adapter = new RVAdapter(cardsList);
         mainRecyclerView.setAdapter(adapter);
         AnimationSet set = new AnimationSet(true);
@@ -245,10 +249,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 db.put(new Card()
                                         .setType("note")
                                         .setFilepath(pathToFile)
-                                        .setTitle(titleField.getText().toString())
+                                        .setTitle(titleField.getText().toString().trim())
                                         .setDatetime(dateField.getText() + " " + timeField.getText())
-                                        .setSubject(subjectField.getText().toString())
-                                        .setDescription(commentField.getText().toString()))
+                                        .setSubject(subjectField.getText().toString().trim())
+                                        .setDescription(commentField.getText().toString().trim()))
                                         .subscribeOn(Schedulers.newThread())
                                         .observeOn(AndroidSchedulers.mainThread())
                                         .subscribe();
@@ -258,7 +262,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 this.type = type;
                                 this.comment = comment;
                                 this.needNotification = needNotification;*/
-                                RVCard newLectureCard = new RVCard(titleField.getText() + "", subjectField.getText() + "", pathToFile, 1, commentField.getText() + "", false);
+                                RVCard newLectureCard = new RVCard(titleField.getText().toString().trim() + "", subjectField.getText().toString().trim() + "", pathToFile, 1, commentField.getText().toString().trim() + "", false);
                                 cardsList.add(0, newLectureCard);
                                 updateAdapter();
                                 //lecture note
@@ -273,16 +277,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 db.put(new Card()
                                         .setType("homework")
                                         .setFilepath(pathToFile)
-                                        .setTitle(titleField.getText().toString())
+                                        .setTitle(titleField.getText().toString().trim())
                                         .setDatetime(dateField.getText() + " " + timeField.getText())
-                                        .setSubject(homeworkSubjectField.getText().toString())
-                                        .setDescription(commentField.getText().toString())
-                                        .setDeadlineDatetime(homeworkDateField.getText().toString())
+                                        .setSubject(homeworkSubjectField.getText().toString().trim())
+                                        .setDescription(commentField.getText().toString().trim())
+                                        .setDeadlineDatetime(homeworkDateField.getText().toString().trim())
                                         .setNotificationFlag(needNotification.isChecked() ? 1 : 0))
                                         .subscribeOn(Schedulers.newThread())
                                         .observeOn(AndroidSchedulers.mainThread())
                                         .subscribe();
-                                RVCard newHomeworkCard = new RVCard(titleField.getText() + "", homeworkSubjectField.getText() + "", pathToFile, 2, "", needNotification.isChecked());
+                                RVCard newHomeworkCard = new RVCard(titleField.getText().toString().trim() + "", homeworkSubjectField.getText().toString().trim() + "", pathToFile, 2, "", needNotification.isChecked());
                                 cardsList.add(0, newHomeworkCard);
                                 updateAdapter();
                                 // homework
@@ -298,13 +302,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 db.put(new Card()
                                         .setType("other")
                                         .setFilepath(pathToFile)
-                                        .setTitle(titleField.getText().toString())
+                                        .setTitle(titleField.getText().toString().trim())
                                         .setDatetime(dateField.getText() + " " + timeField.getText())
-                                        .setDescription(otherCommentField.getText().toString()))
+                                        .setDescription(otherCommentField.getText().toString().trim()))
                                         .subscribeOn(Schedulers.newThread())
                                         .observeOn(AndroidSchedulers.mainThread())
                                         .subscribe();
-                                RVCard newOtherCard = new RVCard(titleField.getText() + "", "", pathToFile, 3, "", false);
+                                RVCard newOtherCard = new RVCard(titleField.getText().toString().trim() + "", "", pathToFile, 3, "", false);
                                 cardsList.add(0, newOtherCard);
                                 updateAdapter();
                                 //other
@@ -566,7 +570,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 else
                     timeField.setText(calendarForThis.get(Calendar.HOUR_OF_DAY) + ":" + calendarForThis.get(Calendar.MINUTE));
             }
-            if (titleField.getText().length() < 1)
+            if (titleField.getText().toString().trim().length() < 1)
                 titleField.setText(pathToFile.substring(pathToFile.lastIndexOf("/") + 1));
         }
     }

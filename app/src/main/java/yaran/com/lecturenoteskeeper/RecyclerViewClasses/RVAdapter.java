@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -67,6 +68,12 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.RVCardViewHolder> 
         ll.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
         mRVCardViewHolder.someBackground.setLayoutParams(ll);
         mRVCardViewHolder.typeImage.setLayoutParams(new RelativeLayout.LayoutParams((int) (MainActivity.width / 2.5 / 2.8125), (int) (MainActivity.width / 2.5 / 2.8125)));
+        mRVCardViewHolder.cv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(MainActivity.context, "touch me dude", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
