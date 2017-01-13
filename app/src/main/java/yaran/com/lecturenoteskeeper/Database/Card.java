@@ -4,6 +4,7 @@ package yaran.com.lecturenoteskeeper.Database;
 import android.provider.BaseColumns;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Card {
     private String filepath = "";
@@ -11,12 +12,12 @@ public class Card {
     private String description = "";
     private String type = "";
     private String subject = "";
-    private String datetime = null;
-    private String deadline_datetime = null;
+    private String datetime = "";
+    private String deadline_datetime = "";
     private int notification_flag = 0;
 
-    public ArrayList<Object> asArray() {
-        ArrayList<Object> obj = new ArrayList<>();
+    public List<Object> asArray() {
+        List<Object> obj = new ArrayList<>();
         obj.add(filepath);
         obj.add(title);
         obj.add(description);

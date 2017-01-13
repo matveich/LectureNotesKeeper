@@ -58,6 +58,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import yaran.com.lecturenoteskeeper.Database.Card;
 import yaran.com.lecturenoteskeeper.Database.DatabaseWrapper;
 import yaran.com.lecturenoteskeeper.RecyclerViewClasses.RVAdapter;
@@ -125,7 +128,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
         searchView = (MaterialSearchView) findViewById(R.id.search_view);
 
-        Log.d(StaticInfo.DEBUG_TAG, "-1");
         db = new DatabaseWrapper(context);
 
         searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
@@ -221,7 +223,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                         .setTitle(titleField.getText().toString())
                                         .setDatetime(dateField.getText() + " " + timeField.getText())
                                         .setSubject(subjectField.getText().toString())
-                                        .setDescription(commentField.getText().toString()));
+                                        .setDescription(commentField.getText().toString()))
+                                        .subscribeOn(Schedulers.newThread())
+                                        .observeOn(AndroidSchedulers.mainThread())
+                                        .subscribe();
                                 /* this.title = title;
                                 this.subject = subject;
                                 this.imagePath = imagePath;
@@ -248,7 +253,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                         .setSubject(homeworkSubjectField.getText().toString())
                                         .setDescription(commentField.getText().toString())
                                         .setDeadlineDatetime(homeworkDateField.getText().toString())
-                                        .setNotificationFlag(needNotification.isChecked() ? 1 : 0));
+                                        .setNotificationFlag(needNotification.isChecked() ? 1 : 0))
+                                        .subscribeOn(Schedulers.newThread())
+                                        .observeOn(AndroidSchedulers.mainThread())
+                                        .subscribe();
                                 RVCard newHomeworkCard = new RVCard(titleField.getText() + "", homeworkSubjectField.getText() + "", pathToFile, 2, "", needNotification.isChecked());
                                 cardsList.add(newHomeworkCard);
                                 updateAdapter();
@@ -267,7 +275,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                         .setFilepath(pathToFile)
                                         .setTitle(titleField.getText().toString())
                                         .setDatetime(dateField.getText() + " " + timeField.getText())
-                                        .setDescription(otherCommentField.getText().toString()));
+                                        .setDescription(otherCommentField.getText().toString()))
+                                        .subscribeOn(Schedulers.newThread())
+                                        .observeOn(AndroidSchedulers.mainThread())
+                                        .subscribe();
                                 RVCard newOtherCard = new RVCard(titleField.getText() + "", "", pathToFile, 3, "", false);
                                 cardsList.add(newOtherCard);
                                 updateAdapter();
@@ -300,7 +311,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         startActivityForResult(intent, 1);
                     }
                 });
-
                 titleField = (MaterialEditText) addNoteLayout.findViewById(R.id.title_field);
                 dateField = (MaterialEditText) addNoteLayout.findViewById(R.id.date_field);
                 dateField.setOnTouchListener(new View.OnTouchListener() {

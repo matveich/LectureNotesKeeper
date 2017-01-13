@@ -23,7 +23,7 @@ class CardsDbHelper extends SQLiteOpenHelper {
             Card.Entry.COLUMN_NAME_DATETIME + TEXT_TYPE + "," +
             Card.Entry.COLUMN_NAME_DEADLINE_DATETIME + TEXT_TYPE + "," +
             Card.Entry.COLUMN_NAME_NOTIFICATION_FLAG + TEXT_TYPE + " )";
-    private static final String SQL_DELETE_ENTRIES =
+    public static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + Card.Entry.TABLE_NAME;
 
     CardsDbHelper(Context context) {
