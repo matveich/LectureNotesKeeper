@@ -48,6 +48,7 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.rengwuxian.materialedittext.MaterialEditText;
@@ -207,6 +208,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
         }
 
+        if (ContextCompat.checkSelfPermission(MainActivity.this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(MainActivity.this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+        }
+
         final TextView userName = (TextView) navigationView.getHeaderView(0).findViewById(R.id.UserName);
         userName.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -249,10 +257,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 db.put(new Card()
                                         .setType("note")
                                         .setFilepath(pathToFile)
-                                        .setTitle(titleField.getText().toString())
+                                        .setTitle(titleField.getText().toString().trim())
                                         .setDatetime(dateField.getText() + " " + timeField.getText())
-                                        .setSubject(subjectField.getText().toString())
-                                        .setDescription(commentField.getText().toString()))
+                                        .setSubject(subjectField.getText().toString().trim())
+                                        .setDescription(commentField.getText().toString().trim()))
                                         .subscribeOn(Schedulers.newThread())
                                         .observeOn(AndroidSchedulers.mainThread())
                                         .subscribe();
@@ -277,11 +285,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 db.put(new Card()
                                         .setType("homework")
                                         .setFilepath(pathToFile)
-                                        .setTitle(titleField.getText().toString())
+                                        .setTitle(titleField.getText().toString().trim())
                                         .setDatetime(dateField.getText() + " " + timeField.getText())
-                                        .setSubject(homeworkSubjectField.getText().toString())
-                                        .setDescription(commentField.getText().toString())
-                                        .setDeadlineDatetime(homeworkDateField.getText().toString())
+                                        .setSubject(homeworkSubjectField.getText().toString().trim())
+                                        .setDescription(commentField.getText().toString().trim())
+                                        .setDeadlineDatetime(homeworkDateField.getText().toString().trim())
                                         .setNotificationFlag(needNotification.isChecked() ? 1 : 0))
                                         .subscribeOn(Schedulers.newThread())
                                         .observeOn(AndroidSchedulers.mainThread())
@@ -302,9 +310,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 db.put(new Card()
                                         .setType("other")
                                         .setFilepath(pathToFile)
-                                        .setTitle(titleField.getText().toString())
+                                        .setTitle(titleField.getText().toString().trim())
                                         .setDatetime(dateField.getText() + " " + timeField.getText())
-                                        .setDescription(otherCommentField.getText().toString()))
+                                        .setDescription(otherCommentField.getText().toString().trim()))
                                         .subscribeOn(Schedulers.newThread())
                                         .observeOn(AndroidSchedulers.mainThread())
                                         .subscribe();
@@ -549,6 +557,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             cursor.close();
             Log.d("picturePath = ", picturePath);
             pathToFile = picturePath;
+            //StaticInfo.moveFileToAppFolder(pathToFile);
             imageField.setImageBitmap(BitmapFactory.decodeFile(picturePath));
             File file = new File(picturePath);
             Date lastModifiedDate = new Date(file.lastModified());
