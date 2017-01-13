@@ -55,6 +55,7 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -95,6 +96,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void initializeAdapter() {
+        List<Card> d = db.get(null, null, null, null, null, null);
+        for (Card z : d) {
+             /* this.title = title;
+                                this.subject = subject;
+                                this.imagePath = imagePath;
+                                this.type = type;
+                                this.comment = comment;
+                                this.needNotification = needNotification;*/
+            boolean needNotif = false;
+            if (z.getNotificationFlag() == 0)
+                needNotif = false;
+            else
+                needNotif = true;
+            int subType = 1;
+            if (z.getType().equals("note"))
+                subType = 1;
+            else if (z.getType().equals("homework"))
+                subType = 2;
+            else
+                subType = 3;
+            RVCard newLectureCard = new RVCard(z.getTitle() + "", z.getSubject() + "", z.getFilepath() + "", subType, z.getDescription() + "", needNotif);
+            cardsList.add(newLectureCard);
+        }
+        Collections.reverse(cardsList);
         adapter = new RVAdapter(cardsList);
         mainRecyclerView.setAdapter(adapter);
         AnimationSet set = new AnimationSet(true);
@@ -234,7 +259,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 this.comment = comment;
                                 this.needNotification = needNotification;*/
                                 RVCard newLectureCard = new RVCard(titleField.getText() + "", subjectField.getText() + "", pathToFile, 1, commentField.getText() + "", false);
-                                cardsList.add(newLectureCard);
+                                cardsList.add(0, newLectureCard);
                                 updateAdapter();
                                 //lecture note
                                 // pathToFile - путь до изображения
@@ -258,7 +283,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                         .observeOn(AndroidSchedulers.mainThread())
                                         .subscribe();
                                 RVCard newHomeworkCard = new RVCard(titleField.getText() + "", homeworkSubjectField.getText() + "", pathToFile, 2, "", needNotification.isChecked());
-                                cardsList.add(newHomeworkCard);
+                                cardsList.add(0, newHomeworkCard);
                                 updateAdapter();
                                 // homework
                                 // pathToFile - путь до изображения
@@ -280,7 +305,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                         .observeOn(AndroidSchedulers.mainThread())
                                         .subscribe();
                                 RVCard newOtherCard = new RVCard(titleField.getText() + "", "", pathToFile, 3, "", false);
-                                cardsList.add(newOtherCard);
+                                cardsList.add(0, newOtherCard);
                                 updateAdapter();
                                 //other
                                 // pathToFile - путь до изображения
